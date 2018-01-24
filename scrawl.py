@@ -2,6 +2,9 @@ import core
 import model
 import settings
 
+import core
+
+
 def get_communitylist():
 	res = []
 	for community in model.Community.select():

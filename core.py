@@ -6,8 +6,9 @@ import misc
 import shlib
 import time
 import datetime
-import urllib2
+#import urllib
 import logging
+import urllib.request
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 BASE_URL = u"http://%s.lianjia.com/" % (settings.CITY)
@@ -103,7 +104,7 @@ def GetRentByRegionlist(regionlist=[u'xicheng']):
     logging.info("Run time: " + str(endtime - starttime))
 
 def get_house_percommunity(communityname):
-    url = BASE_URL + u"ershoufang/rs" + urllib2.quote(communityname.encode('utf8')) + "/"
+    url = BASE_URL + u"ershoufang/rs" + urllib.request.quote(communityname.encode('utf8')) + "/"
     source_code = misc.get_source_code(url)
     soup = BeautifulSoup(source_code, 'lxml')
 
@@ -117,7 +118,7 @@ def get_house_percommunity(communityname):
 
     for page in range(total_pages):
         if page > 0:
-            url_page = BASE_URL + u"ershoufang/pg%drs%s/" % (page, urllib2.quote(communityname.encode('utf8')))
+            url_page = BASE_URL + u"ershoufang/pg%drs%s/" % (page, urllib.request.quote(communityname.encode('utf8')))
             source_code = misc.get_source_code(url_page)
             soup = BeautifulSoup(source_code, 'lxml')
 
@@ -173,7 +174,7 @@ def get_house_percommunity(communityname):
         time.sleep(1)
 
 def get_sell_percommunity(communityname):
-    url = BASE_URL + u"chengjiao/rs" + urllib2.quote(communityname.encode('utf8')) + "/"
+    url = BASE_URL + u"chengjiao/rs" + urllib.request.quote(communityname.encode('utf8')) + "/"
     source_code = misc.get_source_code(url)
     soup = BeautifulSoup(source_code, 'lxml')
 
@@ -187,7 +188,7 @@ def get_sell_percommunity(communityname):
 
     for page in range(total_pages):
         if page > 0:
-            url_page = BASE_URL + u"chengjiao/pg%drs%s/" % (page, urllib2.quote(communityname.encode('utf8')))
+            url_page = BASE_URL + u"chengjiao/pg%drs%s/" % (page, urllib.request.quote(communityname.encode('utf8')))
             source_code = misc.get_source_code(url_page)
             soup = BeautifulSoup(source_code, 'lxml')
         i = 0
@@ -316,7 +317,7 @@ def get_community_perregion(regionname=u'xicheng'):
         time.sleep(1)
 
 def get_rent_percommunity(communityname):
-    url = BASE_URL + u"zufang/rs" + urllib2.quote(communityname.encode('utf8')) + "/"
+    url = BASE_URL + u"zufang/rs" + urllib.request.quote(communityname.encode('utf8')) + "/"
     source_code = misc.get_source_code(url)
     soup = BeautifulSoup(source_code, 'lxml')
 
@@ -330,7 +331,7 @@ def get_rent_percommunity(communityname):
 
     for page in range(total_pages):
         if page > 0:
-            url_page = BASE_URL + u"rent/pg%drs%s/" % (page, urllib2.quote(communityname.encode('utf8')))
+            url_page = BASE_URL + u"rent/pg%drs%s/" % (page, urllib.request.quote(communityname.encode('utf8')))
             source_code = misc.get_source_code(url_page)
             soup = BeautifulSoup(source_code, 'lxml')
         i = 0

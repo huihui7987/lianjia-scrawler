@@ -36,8 +36,10 @@ class BaseModel(Model):
 
 class Community(BaseModel):
 	id 			= BigIntegerField(primary_key=True)
+
 	title 		= CharField()
 	link 		= CharField(unique=True)
+
 	district 	= CharField()
 	bizcircle 	= CharField()
 	tagList 	= CharField()
@@ -55,6 +57,7 @@ class Community(BaseModel):
 
 class Houseinfo(BaseModel):
 	houseID 	= CharField(primary_key=True)
+    
 	title 		= CharField()
 	link 		= CharField()
 	community 	= CharField()
