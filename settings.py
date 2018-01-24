@@ -9,7 +9,7 @@
 
 
 DBENGINE = 'sqlite3' #ENGINE OPTIONS: mysql, sqlite3, postgresql
-DBNAME = 'test_hui'
+DBNAME = 'test_2'
 DBUSER = 'root'
 DBPASSWORD = '123456'
 DBHOST = '127.0.0.1'

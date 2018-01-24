@@ -30,9 +30,10 @@ elif settings.DBENGINE.lower() == 'postgresql':
 else:
 	raise AttributeError("Please setup datatbase at settings.py")
 
+
 class BaseModel(Model):
-    class Meta:
-        database = database
+	class Meta:
+		database = database
 
 class Community(BaseModel):
 	id 			= BigIntegerField(primary_key=True)
@@ -57,7 +58,7 @@ class Community(BaseModel):
 
 class Houseinfo(BaseModel):
 	houseID 	= CharField(primary_key=True)
-    
+	#districtHui = CharField()
 	title 		= CharField()
 	link 		= CharField()
 	community 	= CharField()

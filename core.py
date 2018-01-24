@@ -66,6 +66,7 @@ def GetCommunityByRegionlist(regionlist=[u'xicheng']):
         try:
             if CITY == 'sh':
                 shlib.get_community_perregion(regionname)
+            #print("执行get_community_perregion")
             get_community_perregion(regionname)
             logging.info(regionname + "Done")
         except Exception as e:
@@ -260,7 +261,7 @@ def get_community_perregion(regionname=u'xicheng'):
     if total_pages == None:
         row = model.Community.select().count()
         raise RuntimeError("Finish at %s because total_pages is None" % row)
-
+    #print("get_community_perregion")
     for page in range(total_pages):
         if page > 0:
             url_page = BASE_URL + u"xiaoqu/" + regionname +"/pg%d/" % page
@@ -303,7 +304,8 @@ def get_community_perregion(regionname=u'xicheng'):
 
 
                 communityinfo = get_communityinfo_by_url(link)
-                for key, value in communityinfo.iteritems():
+                for key, value in communityinfo.items():
+                    #print("2222")
                     info_dict.update({key:value})
 
             except:
@@ -421,6 +423,7 @@ def get_house_perregion(district):
                     info_dict.update({u'link':housetitle.a.get('href')})
                     houseID = housetitle.a.get('data-housecode')
                     info_dict.update({u'houseID':houseID})
+                    #info_dict.update({u'districtHui':district})
 
 
                     houseinfo = name.find("div", {"class":"houseInfo"})
