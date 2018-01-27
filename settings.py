@@ -9,7 +9,7 @@
 
 
 DBENGINE = 'sqlite3' #ENGINE OPTIONS: mysql, sqlite3, postgresql
-DBNAME = 'tbTest'
+DBNAME = 'tbTest_year'
 DBUSER = 'root'
 DBPASSWORD = '123456'
 DBHOST = '127.0.0.1'
