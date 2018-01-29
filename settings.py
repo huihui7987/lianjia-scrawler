@@ -19,5 +19,5 @@ CITY = 'tj' # only one, shanghai=sh shenzhen=sh......
 #               u'dongli',u'jinnan',u'tanggu',u'kaifaqutj'] # only pinyin support
 
 
-REGIONLIST = [u'nankai']
+REGIONLIST = [u'jinnan']
 #hexi,hongqiao,xiqing,beichen,dongli,jinnan,tanggu,

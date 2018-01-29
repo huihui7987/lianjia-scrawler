@@ -147,6 +147,7 @@ def get_house_percommunity(communityname):
                 housefloor = name.find("div", {"class":"flood"})
                 floor_all = housefloor.div.get_text().split('-')[0].strip().split(' ')
                 info_dict.update({u'floor':floor_all[0].strip()})
+
                 info_dict.update({u'years':floor_all[-1].strip()})
 
                 followInfo = name.find("div", {"class":"followInfo"})
@@ -202,7 +203,8 @@ def get_sell_percommunity(communityname):
                 try:
                     housetitle = name.find("div", {"class":"title"})
                     info_dict.update({u'title':housetitle.get_text().strip()})
-                    info_dict.update({u'link':housetitle.a.get('href')})
+                    houselink =  housetitle.a.get('href')
+                    info_dict.update({u'link':houselink})
                     houseID = housetitle.a.get('href').split("/")[-1].split(".")[0]
                     info_dict.update({u'houseID':houseID.strip()})
 
@@ -219,11 +221,22 @@ def get_sell_percommunity(communityname):
                     housefloor = name.find("div", {"class":"positionInfo"})
                     floor_all = housefloor.get_text().strip().split(' ')
                     info_dict.update({u'floor':floor_all[0].strip()})
-                    info_dict.update({u'years':floor_all[-1].strip()})
+
+                    info_dict.update({u'architecturalStyle': floor_all[-1].strip()})#板楼
+
+                    #由于网页限制，近一个月的已售房屋不能直接抓取价格数据，可以通过打开link页面并解析得到
 
                     followInfo = name.find("div", {"class":"source"})
                     info_dict.update({u'source':followInfo.get_text().strip()})
 
+                    seltHouseDetail = getSeltInfoLastMonth(houselink)
+
+                    info_dict.update(seltHouseDetail)
+
+
+
+                    # info_dict.update({u'years':floor_all[-1].strip()})#
+                    '''
                     totalPrice = name.find("div", {"class":"totalPrice"})
                     if totalPrice.span is None:
                         info_dict.update({u'totalPrice':totalPrice.get_text().strip()})
@@ -237,7 +250,17 @@ def get_sell_percommunity(communityname):
                         info_dict.update({u'unitPrice':unitPrice.span.get_text().strip()})
 
                     dealDate= name.find("div", {"class":"dealDate"})
-                    info_dict.update({u'dealdate':dealDate.get_text().strip().replace('.','-')})
+
+                    #近30天的dealDate 不显示，需要特别处理
+
+                    if dealDate == '近30天内成交':
+                        pass
+
+
+                    else:
+
+                        info_dict.update({u'dealdate':dealDate.get_text().strip().replace('.','-')})
+                    '''
 
                 except:
                     continue
@@ -248,6 +271,71 @@ def get_sell_percommunity(communityname):
         with model.database.atomic():
             model.Sellinfo.insert_many(data_source).upsert().execute()
         time.sleep(1)
+
+
+def getSeltInfoLastMonth(url):
+    data_source = []
+    info_dict = {}
+
+    html = misc.get_source_code(url)
+    soup = BeautifulSoup(html,'lxml')
+
+    totalPrice = soup.find('span', class_='record_price').get_text()[:-1]
+    unitPrice = soup.find('p',class_='record_detail').get_text().split(',')[0][2:-3]
+    dealdate = soup.find('p',class_='record_detail').get_text().split(',')[2]
+
+    info_dict.update({'totalPrice':totalPrice})
+    info_dict.update({'unitPrice': unitPrice})
+    info_dict.update({'dealdate':dealdate})
+
+    '''
+    msg = soup.find('div',class_='msg').get_text()
+    msgSplit = re.split(r'(\W+)',msg)
+    guapaiPrince = msgSplit[0][:-4]
+    chengjiaoZhouqi = msgSplit[4][:-4]
+    adjustPriceCount = msgSplit[8][:-2]
+    daikanCount = msgSplit[12][:-2]
+    guanzhuCount = msgSplit[16][:-2]
+    lookCount = msgSplit[20][:-2]
+
+    '''
+    msgSplit = soup.select('body > section.wrapper > div.overview > div.info.fr > div.msg > span > label')
+    #guapaiPrince = msgSplit[0].get_text()
+    chengjiaoZhouqi = msgSplit[1].get_text()
+    #adjustPriceCount = msgSplit[2].get_text()
+    daikanCount = msgSplit[3].get_text()
+    guanzhuCount = msgSplit[4].get_text()
+    lookCount = msgSplit[5].get_text()
+
+
+    #info_dict.update({'guapaiPrice':guapaiPrince})
+    info_dict.update({'transactionCycle':chengjiaoZhouqi})
+    #info_dict.update({'adjustPriceCount':adjustPriceCount})
+    info_dict.update({'numberOfVisits':daikanCount})
+    info_dict.update({'followers':guanzhuCount})
+    info_dict.update({'pageView':lookCount})
+
+    '''
+    baseInfo = soup.find('div', class_='content').get_text().split()
+    buildYears = baseInfo[8][4:]
+    warmStyle = baseInfo[11][4:]
+    propertyRight = baseInfo[13][4:]
+    '''
+    baseInfo = soup.find('div', class_='content').findAll('li')
+    buildYears = baseInfo[7].get_text()[4:].strip()
+    warmStyle = baseInfo[10].get_text()[4:].strip()
+    propertyRight = baseInfo[12].get_text()[4:].strip()
+
+    info_dict.update({'buildyears':buildYears})
+    info_dict.update({'warmStyle':warmStyle})
+    info_dict.update({'propertyRight':propertyRight})
+
+    #data_source.append(info_dict)
+
+    return info_dict
+
+
+
 
 def get_community_perregion(regionname=u'xicheng'):
     url = BASE_URL + u"xiaoqu/" + regionname +"/"
@@ -433,6 +521,7 @@ def get_house_perregion(district):
                     info_dict.update({u'square':info[2]})
                     info_dict.update({u'direction':info[3]})
                     info_dict.update({u'decoration':info[4]})
+                    info_dict.update({u'elevate':info[5]})#有无电梯
 
                     housefloor = name.find("div", {"class":"positionInfo"})
                     info_dict.update({u'years':housefloor.get_text().strip()})
@@ -553,7 +642,7 @@ def get_communityinfo_by_url(url):
     res = {}
     for info in communityinfos:
         key_type = {
-        u"建筑年代": "year",
+        u"建筑年代": "year",#建筑年代网页中并没有
         u"建筑类型": "housetype",
         u"物业费用": "cost",
         u"物业公司": "service",

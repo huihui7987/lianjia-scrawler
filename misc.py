@@ -3,7 +3,8 @@ import random
 from datetime import datetime
 from bs4 import BeautifulSoup
 import threading
-from six.moves import urllib
+#from six.moves import urllib
+import urllib.request
 import socket
 
 hds=[{'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'},\

@@ -58,7 +58,7 @@ class Community(BaseModel):
 
 class Houseinfo(BaseModel):
 	houseID 	= CharField(primary_key=True)
-	#districtHui = CharField()
+	district = CharField(null=True)
 	title 		= CharField()
 	link 		= CharField()
 	community 	= CharField()
@@ -67,6 +67,7 @@ class Houseinfo(BaseModel):
 	square 		= CharField()
 	direction 	= CharField()
 	floor 		= CharField()
+	elevate     = CharField()
 	taxtype 	= CharField()
 	totalPrice 	= CharField()
 	unitPrice 	= CharField()
@@ -87,16 +88,26 @@ class Sellinfo(BaseModel):
 	title 		= CharField()
 	link 		= CharField()
 	community 	= CharField()
-	years 		= CharField()
+	buildyears 		= CharField()
 	housetype 	= CharField()
 	square 		= CharField()
 	direction 	= CharField()
 	floor 		= CharField()
 	status 		= CharField()
 	source 		= CharField()
+	architecturalStyle = CharField()
+
 	totalPrice 	= CharField()
 	unitPrice 	= CharField()
 	dealdate 	= CharField(null=True)
+
+	transactionCycle = CharField()#成交周期
+	numberOfVisits = CharField()#带看次数
+	followers = CharField()#关注人数
+	pageView = CharField()#浏览人数
+	propertyRight = CharField()#产权
+	warmStyle = CharField()#取暖方式
+
 	updatedate 	= DateTimeField(default=datetime.datetime.now)
 
 class Rentinfo(BaseModel):
